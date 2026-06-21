@@ -2,8 +2,12 @@
 
 Hyperparameters and feature selection for FinRL PPO agent.
 """
+import os
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import List
+
+_ROOT = Path(__file__).resolve().parent.parent
 
 
 @dataclass
@@ -70,15 +74,20 @@ class RLConfig:
     models_dir: str = "models"
     logs_dir: str = "logs"
     
-    # Data sources
-    market_data_path: str = "../market_data/hourly"
-    sentiment_db_path: str = "../sentiment_analysis/backend/sentiment_history.db"
-    risk_db_path: str = "../risk_calculator/backend/risk_history.db"
+    # Data sources — all overridable via env vars for Docker/cloud deployment
+    market_data_path: str = field(default_factory=lambda: os.environ.get(
+        "MARKET_DATA_DIR", str(_ROOT / "market_data" / "hourly")))
+    sentiment_db_path: str = field(default_factory=lambda: os.environ.get(
+        "SENTIMENT_DB_PATH", str(_ROOT / "sentiment_analysis" / "backend" / "sentiment_history.db")))
+    risk_db_path: str = field(default_factory=lambda: os.environ.get(
+        "RISK_DB_PATH", str(_ROOT / "risk_calculator" / "backend" / "risk_history.db")))
     paper_trades_db: str = "rl_paper_trades.db"
-    
-    # API fallbacks
-    sentiment_api_url: str = "http://localhost:8000"
-    risk_api_url: str = "http://localhost:8100"
+
+    # API URLs — overridable via env vars for Docker/cloud deployment
+    sentiment_api_url: str = field(default_factory=lambda: os.environ.get(
+        "SENTIMENT_API_URL", "http://localhost:8000"))
+    risk_api_url: str = field(default_factory=lambda: os.environ.get(
+        "RISK_API_URL", "http://localhost:8100"))
     
     # Scheduling
     run_hourly: bool = True

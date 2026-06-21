@@ -136,7 +136,9 @@ def cmd_backtest(ticker: str, episodes: int = 10, train_split: float = 0.3):
 
 
 def cmd_paper():
-    """Run paper trading job."""
+    """[DEPRECATED] Use: python -m harness.cli signal_generation
+    Paper trading is now owned by the harness. This command is kept for dev/debug only.
+    """
     from rl_strategy.scheduler.hourly_job import run_hourly
     
     print("\n" + "="*60)
@@ -147,7 +149,9 @@ def cmd_paper():
 
 
 def cmd_positions():
-    """Show current positions."""
+    """[DEPRECATED] Use: python -m harness.cli positions
+    Positions are now tracked in harness_trades.db. This command shows RL-only legacy positions.
+    """
     from rl_strategy.paper_trading.db import PaperTradingDB
     
     print("\n" + "="*60)

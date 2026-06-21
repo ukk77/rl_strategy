@@ -19,18 +19,17 @@ class FeatureEngineer:
     
     def __init__(self):
         self.cfg = get_config()
-        self.trading_root = Path(__file__).resolve().parents[2]
-    
+
     def load_ohlcv(self, ticker: str) -> Optional[pd.DataFrame]:
         """Load hourly OHLCV data from parquet files.
-        
+
         Args:
             ticker: Stock symbol
-            
+
         Returns:
             DataFrame with OHLCV data or None if not found
         """
-        data_path = self.trading_root / self.cfg.market_data_path.lstrip("../") / f"{ticker}.parquet"
+        data_path = Path(self.cfg.market_data_path) / f"{ticker}.parquet"
         
         if not data_path.exists():
             print(f"Warning: No data file found at {data_path}")
@@ -59,7 +58,7 @@ class FeatureEngineer:
         Returns:
             DataFrame with sentiment data or None if DB not found
         """
-        db_path = self.trading_root / self.cfg.sentiment_db_path.lstrip("../")
+        db_path = Path(self.cfg.sentiment_db_path)
         
         if not db_path.exists():
             print(f"Warning: Sentiment DB not found at {db_path}")
@@ -119,7 +118,7 @@ class FeatureEngineer:
         Returns:
             DataFrame with risk data or None if DB not found
         """
-        db_path = self.trading_root / self.cfg.risk_db_path.lstrip("../")
+        db_path = Path(self.cfg.risk_db_path)
         
         if not db_path.exists():
             print(f"Warning: Risk DB not found at {db_path}")
