@@ -24,7 +24,9 @@ class RLConfig:
         # Healthcare & Defensive
         "LLY", "UNH", "JNJ", "MRK", "XLV", "ABBV", "GILD",
         # Industrials & Materials
-        "CAT", "BA", "LMT", "GE", "NUE", "XLB", "FCX", "MP", "RTX", "CAT",
+        "CAT", "BA", "LMT", "GE", "NUE", "XLB", "FCX", "MP", "RTX", "LIN",
+        # Technology (mature)
+        "IBM",
         # Energy & Commodities
         "XOM", "VST", "GLD", "XLE", "EQT", "KMI", "WMB", "USAR", "UUUU",
         # Consumer & Retail

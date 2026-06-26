@@ -136,65 +136,15 @@ def cmd_backtest(ticker: str, episodes: int = 10, train_split: float = 0.3):
 
 
 def cmd_paper():
-    """[DEPRECATED] Use: python -m harness.cli signal_generation
-    Paper trading is now owned by the harness. This command is kept for dev/debug only.
-    """
-    from rl_strategy.scheduler.hourly_job import run_hourly
-    
-    print("\n" + "="*60)
-    print("RL STRATEGY - PAPER TRADING")
-    print("="*60 + "\n")
-    
-    run_hourly()
+    print("ERROR: Independent paper trading is disabled. Please use the unified harness: python -m harness.cli run")
+    import sys
+    sys.exit(1)
 
 
 def cmd_positions():
-    """[DEPRECATED] Use: python -m harness.cli positions
-    Positions are now tracked in harness_trades.db. This command shows RL-only legacy positions.
-    """
-    from rl_strategy.paper_trading.db import PaperTradingDB
-    
-    print("\n" + "="*60)
-    print("RL STRATEGY - POSITIONS")
-    print("="*60 + "\n")
-    
-    db = PaperTradingDB()
-    positions = db.get_all_positions()
-    
-    if not positions:
-        print("No open positions\n")
-        return
-    
-    total_value = 0
-    total_pnl = 0
-    
-    print(f"{'Ticker':<10} {'Shares':>12} {'Entry':>12} {'Current':>12} {'P&L':>14}")
-    print("-" * 65)
-    
-    for pos in positions:
-        # Calculate total P&L including both realized and unrealized
-        pnl = (pos.realized_pnl or 0) + (pos.unrealized_pnl or 0)
-        total_pnl += pnl
-        total_value += pos.shares * (pos.current_price or 0)
-        
-        # Handle None values for display
-        entry_price = pos.entry_price or 0
-        current_price = pos.current_price or 0
-        
-        print(f"{pos.ticker:<10} {pos.shares:>12.2f} ${entry_price:>10.2f} "
-              f"${current_price:>10.2f} ${pnl:>12.2f}")
-    
-    print("-" * 65)
-    print(f"{'Total':<10} {'':>12} {'':>12} ${total_value:>10.2f} ${total_pnl:>12.2f}")
-    print()
-    
-    # Show performance stats
-    stats = db.get_performance_stats()
-    print("Performance:")
-    print(f"  Total trades: {stats['total_trades']}")
-    print(f"  Win rate:     {stats['win_rate']*100:.1f}%")
-    print(f"  Total P&L:    ${stats['total_pnl']:.2f}")
-    print()
+    print("ERROR: Independent paper trading is disabled. Please use the unified harness: python -m harness.cli positions")
+    import sys
+    sys.exit(1)
 
 
 def cmd_results(ticker: str = None):
