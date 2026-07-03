@@ -108,11 +108,11 @@ class TradingEnv(gym.Env):
         """Build observation vector from current state.
         
         Returns:
-            18-dim observation array
+            17-dim observation array
         """
         if self.current_step >= len(self.features):
             # End of data, return zeros
-            return np.zeros(18, dtype=np.float32)
+            return np.zeros(17, dtype=np.float32)
         
         # Get current features (17 dims)
         feature_cols = [
@@ -130,7 +130,7 @@ class TradingEnv(gym.Env):
         # Add position flag (1 dim)
         position_flag = np.array([1.0 if self.position_shares > 0 else 0.0], dtype=np.float32)
         
-        # Concatenate: 17 + 1 = 18 dims
+        # Concatenate: 16 + 1 = 17 dims
         obs = np.concatenate([features, position_flag])
         
         # Clip to reasonable bounds
@@ -155,9 +155,9 @@ class TradingEnv(gym.Env):
         self.episode_returns = []
         self.episode_trades = 0
         
-        # Random starting point for training variety (if seed not set)
-        if seed is None and len(self.features) > 1000:
-            self.current_step = np.random.randint(0, len(self.features) - 1000)
+        # Random starting point for training variety (uses seeded np_random for reproducibility)
+        if len(self.features) > 1000:
+            self.current_step = int(self.np_random.integers(0, len(self.features) - 1000))
         
         obs = self._get_observation()
         info = {
@@ -240,8 +240,8 @@ class TradingEnv(gym.Env):
         else:
             volatility = 0.01  # Default volatility
         
-        # Risk-adjusted reward (Sharpe-like)
-        reward = pnl / (volatility * self.initial_cash)
+        # Risk-adjusted reward (Sharpe-like) — normalise by current portfolio value
+        reward = pnl / (volatility * max(self.prev_portfolio_value, 1.0))
         
         # Penalty for excessive trading
         if trade_value > 0:

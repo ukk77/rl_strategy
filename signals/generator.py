@@ -106,9 +106,15 @@ class SignalGenerator:
             shares = position_before * sell_fraction
             position_after = position_before - shares
         
-        # Confidence based on model certainty
-        # For now, use a simple heuristic based on action magnitude
-        confidence = 0.5 + 0.5 * (action / 6.0) if action > 0 else 0.5
+        # Confidence = policy's softmax probability for the chosen action
+        try:
+            import torch as th
+            obs_t, _ = self.agent.model.policy.obs_to_tensor(observation)
+            with th.no_grad():
+                dist = self.agent.model.policy.get_distribution(obs_t)
+                confidence = float(dist.distribution.probs[0, action])
+        except Exception:
+            confidence = 1.0 / 7  # uniform fallback (7 actions)
         
         # Build features dict for logging
         features = None
